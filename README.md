@@ -1,6 +1,6 @@
 # Web Shader Editor
 
-  ### Frontend: Angular2, WebGL
+  ### Frontend: Angular, WebGL
   
   ### Backend: Kotlin, Spring Boot, Spring Data Rest, PostgreSQL
 
