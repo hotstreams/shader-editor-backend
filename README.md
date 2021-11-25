@@ -1,7 +1,8 @@
 # Web Shader Editor using WebGL
 
-Frontend: Angular2, WebGL
-Backend: Kotlin, Spring Boot, Spring Data Rest, PostgreSQL
+  ### Frontend: Angular2, WebGL
+  
+  ### Backend: Kotlin, Spring Boot, Spring Data Rest, PostgreSQL
 
 ![me](content/img.png)
 
