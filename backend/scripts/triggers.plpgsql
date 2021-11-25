@@ -1,0 +1,60 @@
+CREATE FUNCTION shader_program_check() RETURNS trigger
+AS $$
+BEGIN
+	IF (SELECT COUNT(*) FROM Shader WHERE Shader.ShaderProgramID = NEW.ShaderProgramID AND Shader."type" = NEW."type") != 0 THEN
+		RAISE EXCEPTION 'It is illegal to have two equal shader types';
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS shader_check ON Shader;
+CREATE TRIGGER shader_check
+BEFORE INSERT OR UPDATE ON Shader
+FOR EACH ROW
+EXECUTE PROCEDURE shader_program_check();
+
+CREATE FUNCTION material_shader_check() RETURNS trigger
+AS $$
+BEGIN
+	IF (SELECT COUNT(*) FROM Shader WHERE Shader.ShaderProgramID = NEW.ShaderProgramID AND Shader."type" = 'Vertex') != 1 THEN
+		RAISE EXCEPTION 'Material shader should have vertex shader';
+	END IF;
+
+	IF (SELECT COUNT(*) FROM Shader WHERE Shader.ShaderProgramID = NEW.ShaderProgramID AND Shader."type" = 'Fragment') != 1 THEN
+		RAISE EXCEPTION 'Material shader should have fragment shader';
+	END IF;
+
+	IF (SELECT COUNT(*) FROM Shader WHERE Shader.ShaderProgramID = NEW.ShaderProgramID AND Shader."type" = 'TessEval')  != 0 THEN
+		IF (SELECT COUNT(*) FROM Shader WHERE Shader.ShaderProgramID = NEW.ShaderProgramID AND Shader."type" = 'TessControl') = 0 THEN
+		RAISE EXCEPTION 'Material shader should have TessControl shader because TessEval exists';
+		END IF;
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql; 
+
+DROP TRIGGER IF EXISTS material_shader_check ON Material;
+CREATE TRIGGER material_shader_check
+BEFORE INSERT OR UPDATE ON Material
+FOR EACH ROW
+EXECUTE PROCEDURE material_shader_check();
+
+CREATE FUNCTION framebuffer_attachment_check() RETURNS trigger
+AS $$
+BEGIN
+	IF (SELECT COUNT(*) FROM FramebufferTexture WHERE FramebufferTexture.FramebufferID = NEW.FramebufferID AND FramebufferTexture."type" = NEW."type") != 0 THEN
+		RAISE EXCEPTION 'It is illegal to have two equal framebuffer texture attachments';
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS framebuffer_attachment ON FramebufferTexture;
+CREATE TRIGGER framebuffer_attachment
+BEFORE INSERT OR UPDATE ON FramebufferTexture
+FOR EACH ROW
+EXECUTE PROCEDURE framebuffer_attachment_check();
