@@ -1,0 +1,59 @@
+<div class="row">
+	 <div class="col-sm-4">
+      <p-listbox [options]="objects" [(ngModel)]="object" (onChange)="objectChanged()"></p-listbox>
+    </div>
+
+    <div *ngIf="object != 'WebGL'" class="col-sm-2">
+      <p-listbox [options]="selected_objects" optionLabel="id" [(ngModel)]="selected_object" (onChange)="selectedObjectChanged($event)" ></p-listbox>
+    </div>
+
+	<div *ngIf="object == 'WebGL'" class="col-sm-8">
+		<div class="row">
+		    <p-button id ="initbutton" (onClick)="initGL()" styleClass="p-button-rounded p-button-success" class="col-sm-6">Initialize WebGL</p-button>
+			<div id="canvas" class="col-sm-7">
+			
+			</div>
+
+			<div class="col-sm-4" *ngIf="inited && fragment_shader != null">
+				<textarea [(ngModel)]="fragment_shader.code" rows="10" cols="40"></textarea>
+				<p-button (onClick)="compile()" styleClass="p-button-rounded p-button-success">Compile</p-button>
+				<p-button (onClick)="save()" styleClass="p-button-rounded p-button-success">Save</p-button>
+			</div>
+		</div>
+	</div>
+
+
+      <!-- SHADERS -->
+
+	<div *ngIf="object == 'Shaders'" class="col-sm-3">
+		<p-dropdown [options]="shader_types" [(ngModel)]="selected_shader.type"></p-dropdown>
+		<textarea [(ngModel)]="selected_shader.code" rows="10" cols="40"></textarea>
+		<p-button (onClick)="save_shader()" styleClass="p-button-rounded p-button-success">Save</p-button>
+		<p-button (onClick)="add_shader()" styleClass="p-button-rounded p-button-success">Add</p-button>
+	</div>
+
+      <!-- SHADER PROGRAMS -->
+
+	<div *ngIf="object == 'Shader Programs'" class="col-sm-3">
+		<textarea [(ngModel)]="selected_shader_program.description" rows="10" cols="40"></textarea>
+		<p-button (onClick)="save_shader_program()" styleClass="p-button-rounded p-button-success">Save</p-button>
+		<p-button (onClick)="add_shader_program()" styleClass="p-button-rounded p-button-success">Add</p-button>
+	</div>
+
+<!-- TEXTURES -->
+
+	<div *ngIf="object == 'Textures'" class="col-sm-3">
+		<img [src]="texture_url" width="200" height="150">
+		<p-dropdown [options]="texture_types" [(ngModel)]="selected_texture.type"></p-dropdown>
+		<p-dropdown [options]="texture_filtering" [(ngModel)]="selected_texture.filtering"></p-dropdown>
+		<input id="disabled-input" type="text" pInputText [disabled]="true" [(ngModel)]="selected_texture.width" />
+		<input id="disabled-input" type="text" pInputText [disabled]="true" [(ngModel)]="selected_texture.height" />
+		<input id="disabled-input" type="text" pInputText [(ngModel)]="selected_texture.name" />
+		<p-dropdown [options]="texture_format" [(ngModel)]="selected_texture.format"></p-dropdown>
+		<input type="file" accept="image/*" (change)="imageListener($event)" chooseLabel="Change image" >
+		<p-button (onClick)="save_texture()" styleClass="p-button-rounded p-button-success">Save</p-button>
+		<p-button (onClick)="add_texture()" styleClass="p-button-rounded p-button-success">Add</p-button>
+	</div>
+</div>
+
+
