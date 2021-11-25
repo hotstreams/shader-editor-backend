@@ -1,4 +1,4 @@
-# Web Shader Editor using WebGL
+# Web Shader Editor
 
   ### Frontend: Angular2, WebGL
   
